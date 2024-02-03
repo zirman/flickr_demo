@@ -7,43 +7,72 @@ import com.flickr.demo.common.data.PhotosRepository
 import com.flickr.demo.common.scalars.Tags
 import dagger.hilt.android.lifecycle.HiltViewModel
 import kotlinx.coroutines.channels.Channel
+import kotlinx.coroutines.channels.ReceiveChannel
+import kotlinx.coroutines.currentCoroutineContext
 import kotlinx.coroutines.delay
+import kotlinx.coroutines.ensureActive
+import kotlinx.coroutines.flow.MutableSharedFlow
 import kotlinx.coroutines.flow.MutableStateFlow
 import kotlinx.coroutines.flow.SharedFlow
 import kotlinx.coroutines.flow.SharingStarted
 import kotlinx.coroutines.flow.asStateFlow
-import kotlinx.coroutines.flow.catch
-import kotlinx.coroutines.flow.mapLatest
+import kotlinx.coroutines.flow.combine
+import kotlinx.coroutines.flow.emitAll
+import kotlinx.coroutines.flow.flow
 import kotlinx.coroutines.flow.shareIn
+import kotlinx.coroutines.flow.transformLatest
 import javax.inject.Inject
+import kotlin.time.Duration.Companion.seconds
 
 @HiltViewModel
 class HomeViewModel @Inject constructor(
     private val photosRepository: PhotosRepository,
 ) : ViewModel() {
     val searchTagsStateFlow: MutableStateFlow<Tags> = MutableStateFlow(Tags(""))
+    private val retryEvent: MutableSharedFlow<Unit> = MutableSharedFlow()
     private val loadingMutableStateFlow: MutableStateFlow<Boolean> = MutableStateFlow(false)
     val loadingStateFlow = loadingMutableStateFlow.asStateFlow()
-    private val errorsStateFlow: Channel<Throwable?> = Channel()
+    private val errorsChannel: Channel<Throwable?> = Channel()
+    val errorsReceiveChannel: ReceiveChannel<Throwable?> = errorsChannel
 
-    val photosStateFlow: SharedFlow<List<PhotoItem>> = searchTagsStateFlow
-        .mapLatest { tags ->
-            // `mapLatest()` and `delay()` is used instead of `debounce()` so that a request is
-            // cancelled immediately if the user starts typing when a previous request is in flight.
-            delay(1_000)
-            try {
-                loadingMutableStateFlow.value = true
-                photosRepository.getPhotosByTags(tags)
-            } finally {
-                loadingMutableStateFlow.value = false
+    val photosStateFlow: SharedFlow<List<PhotoItem>> =
+        combine(
+            searchTagsStateFlow,
+            flow {
+                // initial event is required to start combine
+                emit(Unit)
+                // retry events from UI
+                emitAll(retryEvent)
+            },
+        ) { tags, _ -> tags }
+            .transformLatest { tags ->
+                try {
+                    // `mapLatest()` and `delay()` is used instead of `debounce()` so that an in flight
+                    // request is cancelled immediately if the tags have changed.
+                    delay(typingDebounce.inWholeMilliseconds)
+                    loadingMutableStateFlow.value = true
+                    emit(photosRepository.getPhotosByTags(tags))
+                } catch (throwable: Throwable) {
+                    currentCoroutineContext().ensureActive()
+                    errorsChannel.send(throwable)
+                } finally {
+                    loadingMutableStateFlow.value = false
+                }
             }
-        }
-        .catch { throwable -> errorsStateFlow.send(throwable) }
-        .shareIn(
-            scope = viewModelScope,
-            // Share results with timeout so that config changes don't cancel this flow.
-            started = SharingStarted.WhileSubscribed(2_000),
-            // Ensure that new subscribers get latest value.
-            replay = 1,
-        )
+            .shareIn(
+                scope = viewModelScope,
+                // Share results with timeout so that config changes don't cancel this flow.
+                started = SharingStarted.WhileSubscribed(subscriptionTimeout.inWholeMilliseconds),
+                // Ensure that new subscribers get latest value.
+                replay = 1,
+            )
+
+    suspend fun retry() {
+        retryEvent.emit(Unit)
+    }
+
+    companion object {
+        val typingDebounce = 1.seconds
+        val subscriptionTimeout = 2.seconds
+    }
 }

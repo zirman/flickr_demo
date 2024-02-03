@@ -9,6 +9,7 @@ import com.flickr.demo.common.scalars.Title
 import io.ktor.client.HttpClient
 import io.ktor.client.call.body
 import io.ktor.client.request.get
+import io.ktor.client.request.parameter
 import kotlinx.serialization.SerialName
 import kotlinx.serialization.Serializable
 
@@ -32,5 +33,9 @@ data class PhotosApiRequest(
 )
 
 suspend fun HttpClient.photosApiRequest(tags: Tags): PhotosApiRequest {
-    return get("$baseUrl/services/feeds/photos_public.gne?format=json&nojsoncallback=1&tags=${tags.string}").body()
+    return get("$baseUrl/services/feeds/photos_public.gne") {
+        parameter("format", "json")
+        parameter("nojsoncallback", 1)
+        parameter("tags", tags.string)
+    }.body()
 }

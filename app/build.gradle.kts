@@ -88,7 +88,6 @@ dependencies {
     lintChecks(libs.composeLintChecks)
     implementation(libs.bundles.androidxApp)
     implementation(libs.bundles.google)
-    implementation(libs.bundles.orbit)
     implementation(libs.slf4jSimple)
     implementation(libs.coilCompose)
 
@@ -98,7 +97,6 @@ dependencies {
     implementation(libs.hiltNavigationCompose)
 
     testImplementation(libs.mockk)
-    testImplementation(libs.orbitTest)
     testImplementation(libs.kotlinTest)
     testImplementation(libs.kotlinxCoroutinesTest)
     testImplementation(libs.uiTestJunit4)

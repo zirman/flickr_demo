@@ -12,7 +12,7 @@ const val mainGraphRoutePattern = "main"
 fun NavGraphBuilder.mainGraph(navController: NavController) {
     navigation(
         startDestination = MainRoute.Home.path,
-        route = mainGraphRoutePattern
+        route = mainGraphRoutePattern,
     ) {
         homeScreen(navController)
         detailScreen(navController)

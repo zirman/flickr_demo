@@ -9,12 +9,13 @@ import androidx.compose.runtime.Composable
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.unit.dp
 import com.flickr.demo.common.data.PhotoItem
+import com.flickr.demo.common.scalars.Url
 import kotlinx.collections.immutable.ImmutableList
 
 @Composable
 fun HomeContent(
     photoItems: ImmutableList<PhotoItem>,
-    onClickPhotoItem: (PhotoItem) -> Unit,
+    onClickPhotoItem: (Url) -> Unit,
     modifier: Modifier = Modifier,
 ) {
     LazyVerticalGrid(

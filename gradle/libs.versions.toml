@@ -10,13 +10,14 @@ kotlin = "1.9.22"
 ksp = "1.9.22-1.0.17"
 kotlinxCoroutines = "1.7.3"
 kotlinxSerialization = "1.6.2"
+kotlinxCollectionsImmutable = "0.3.7"
+kotlinxDatetime = "0.5.0"
 ktor = "2.3.7"
 activityKtx = "1.8.2"
 fragmentKtx = "1.6.2"
 lifecycle = "2.7.0"
 navigation = "2.7.6"
 hilt = "2.50"
-kotlinxCollectionsImmutable = "0.3.7"
 window = "1.2.0"
 appcompat = "1.6.1"
 coreKtx = "1.12.0"
@@ -33,7 +34,6 @@ slf4jSimple = "2.0.11"
 junit = "4.13.2"
 junitExt = "1.1.5"
 desugarJdkLibs = "2.0.4"
-orbit = "6.1.0"
 coil = "2.5.0"
 mockk = "1.13.9"
 
@@ -51,6 +51,7 @@ kotlinx = [
     "kotlinxCoroutinesAndroid",
     "kotlinxSerializationJson",
     "kotlinxCollectionsImmutable",
+    "kotlinxDatetime",
 ]
 ktor = [
     "ktorClientCore",
@@ -101,11 +102,6 @@ androidxCompose = [
     "uiTextGoogleFonts",
     "coilCompose",
 ]
-orbit = [
-    "orbitCore",
-    "orbitViewmodel",
-    "orbitCompose",
-]
 
 [libraries]
 kotlinTest = { group = "org.jetbrains.kotlin", name = "kotlin-test", version.ref = "kotlin" }
@@ -113,6 +109,7 @@ kotlinxCoroutinesAndroid = { group = "org.jetbrains.kotlinx", name = "kotlinx-co
 kotlinxCoroutinesTest = { group = "org.jetbrains.kotlinx", name = "kotlinx-coroutines-test", version.ref = "kotlinxCoroutines" }
 kotlinxSerializationJson = { group = "org.jetbrains.kotlinx", name = "kotlinx-serialization-json", version.ref = "kotlinxSerialization" }
 kotlinxCollectionsImmutable = { group = "org.jetbrains.kotlinx", name = "kotlinx-collections-immutable", version.ref = "kotlinxCollectionsImmutable" }
+kotlinxDatetime = { group = "org.jetbrains.kotlinx", name = "kotlinx-datetime", version.ref = "kotlinxDatetime" }
 
 desugarJdkLibs = { group = "com.android.tools", name = "desugar_jdk_libs", version.ref = "desugarJdkLibs" }
 
@@ -174,11 +171,6 @@ uiTestManifest = { group = "androidx.compose.ui", name = "ui-test-manifest" }
 slf4jSimple = { group = "org.slf4j", name = "slf4j-simple", version.ref = "slf4jSimple" }
 junit = { group = "junit", name = "junit", version.ref = "junit" }
 junitExt = { group = "androidx.test.ext", name = "junit", version.ref = "junitExt" }
-
-orbitCore = { group = "org.orbit-mvi", name = "orbit-core", version.ref = "orbit" }
-orbitViewmodel = { group = "org.orbit-mvi", name = "orbit-viewmodel", version.ref = "orbit" }
-orbitCompose = { group = "org.orbit-mvi", name = "orbit-compose", version.ref = "orbit" }
-orbitTest = { group = "org.orbit-mvi", name = "orbit-test", version.ref = "orbit" }
 
 coilCompose = { group = "io.coil-kt", name = "coil-compose", version.ref = "coil" }
 
