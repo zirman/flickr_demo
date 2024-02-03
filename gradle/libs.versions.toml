@@ -1,0 +1,185 @@
+[versions]
+jvmTarget = "17"
+compileSdk = "34"
+targetSdk = "34"
+minSdk = "26"
+buildToolsVersion = "34.0.0"
+composeCompiler = "1.5.8"
+android = "8.2.2"
+kotlin = "1.9.22"
+ksp = "1.9.22-1.0.17"
+kotlinxCoroutines = "1.7.3"
+kotlinxSerialization = "1.6.2"
+ktor = "2.3.7"
+activityKtx = "1.8.2"
+fragmentKtx = "1.6.2"
+lifecycle = "2.7.0"
+navigation = "2.7.6"
+hilt = "2.50"
+kotlinxCollectionsImmutable = "0.3.7"
+window = "1.2.0"
+appcompat = "1.6.1"
+coreKtx = "1.12.0"
+collectionKtx = "1.4.0"
+paletteKtx = "1.0.0"
+workRuntimeKtx = "2.9.0"
+preferenceKtx = "1.2.1"
+hiltNavigationCompose = "1.1.0"
+composeLintChecks = "1.3.1"
+material3 = "1.2.0-rc01"
+composeBom = "2024.01.00"
+uiTestJunit4 = "1.6.0"
+slf4jSimple = "2.0.11"
+junit = "4.13.2"
+junitExt = "1.1.5"
+desugarJdkLibs = "2.0.4"
+orbit = "6.1.0"
+coil = "2.5.0"
+mockk = "1.13.9"
+
+[plugins]
+kotlinAndroid = { id = "org.jetbrains.kotlin.android", version.ref = "kotlin" }
+kotlinxSerialization = { id = "org.jetbrains.kotlin.plugin.serialization", version.ref = "kotlin" }
+kotlinxParcelize = { id = "kotlin-parcelize", version.ref = "kotlin" }
+androidApplication = { id = "com.android.application", version.ref = "android" }
+androidLibrary = { id = "com.android.library", version.ref = "android" }
+ksp = { id = "com.google.devtools.ksp", version.ref = "ksp" }
+hilt = { id = "com.google.dagger.hilt.android", version.ref = "hilt" }
+
+[bundles]
+kotlinx = [
+    "kotlinxCoroutinesAndroid",
+    "kotlinxSerializationJson",
+    "kotlinxCollectionsImmutable",
+]
+ktor = [
+    "ktorClientCore",
+    "ktorClientAndroid",
+    "ktorClientLogging",
+    "ktorClientContentNegotiation",
+    "ktorSerializationKotlinxJson"
+]
+google = [
+    "kspSymbolProcessingApi",
+]
+androidx = [
+    "coreKtx",
+    "collectionKtx",
+    "appcompat",
+    "window",
+    "activityKtx",
+    "activityCompose",
+    "fragmentKtx",
+    "paletteKtx",
+    "workRuntimeKtx",
+    "preferenceKtx",
+    "lifecycleProcess",
+    "lifecycleRuntimeKtx",
+    "lifecycleRuntimeCompose",
+    "lifecycleViewModelKtx",
+    "lifecycleViewModelCompose",
+    "lifecycleViewModelSavedState",
+]
+androidxApp = [
+    "navigationRuntimeKtx",
+    "navigationUiKtx",
+    "navigationCompose",
+    "composeMaterial",
+]
+androidxCompose = [
+    "ui",
+    "uiViewBinding",
+    "uiTooling",
+    "uiToolingData",
+    "uiToolingPreview",
+    "uiUtil",
+    "material3",
+    "material3WindowSize",
+    "materialIconsCore",
+    "materialIconsExtended",
+    "foundation",
+    "uiTextGoogleFonts",
+    "coilCompose",
+]
+orbit = [
+    "orbitCore",
+    "orbitViewmodel",
+    "orbitCompose",
+]
+
+[libraries]
+kotlinTest = { group = "org.jetbrains.kotlin", name = "kotlin-test", version.ref = "kotlin" }
+kotlinxCoroutinesAndroid = { group = "org.jetbrains.kotlinx", name = "kotlinx-coroutines-android", version.ref = "kotlinxCoroutines" }
+kotlinxCoroutinesTest = { group = "org.jetbrains.kotlinx", name = "kotlinx-coroutines-test", version.ref = "kotlinxCoroutines" }
+kotlinxSerializationJson = { group = "org.jetbrains.kotlinx", name = "kotlinx-serialization-json", version.ref = "kotlinxSerialization" }
+kotlinxCollectionsImmutable = { group = "org.jetbrains.kotlinx", name = "kotlinx-collections-immutable", version.ref = "kotlinxCollectionsImmutable" }
+
+desugarJdkLibs = { group = "com.android.tools", name = "desugar_jdk_libs", version.ref = "desugarJdkLibs" }
+
+kspSymbolProcessingApi = { group = "com.google.devtools.ksp", name = "symbol-processing-api", version.ref = "ksp" }
+
+ktorClientCore = { group = "io.ktor", name = "ktor-client-core", version.ref = "ktor" }
+ktorClientAndroid = { group = "io.ktor", name = "ktor-client-android", version.ref = "ktor" }
+ktorClientLogging = { group = "io.ktor", name = "ktor-client-logging", version.ref = "ktor" }
+ktorClientContentNegotiation = { group = "io.ktor", name = "ktor-client-content-negotiation", version.ref = "ktor" }
+ktorSerializationKotlinxJson = { group = "io.ktor", name = "ktor-serialization-kotlinx-json", version.ref = "ktor" }
+
+window = { group = "androidx.window", name = "window", version.ref = "window" }
+appcompat = { group = "androidx.appcompat", name = "appcompat", version.ref = "appcompat" }
+coreKtx = { group = "androidx.core", name = "core-ktx", version.ref = "coreKtx" }
+collectionKtx = { group = "androidx.collection", name = "collection-ktx", version.ref = "collectionKtx" }
+activityKtx = { group = "androidx.activity", name = "activity-ktx", version.ref = "activityKtx" }
+activityCompose = { group = "androidx.activity", name = "activity-compose", version.ref = "activityKtx" }
+fragmentKtx = { group = "androidx.fragment", name = "fragment-ktx", version.ref = "fragmentKtx" }
+paletteKtx = { group = "androidx.palette", name = "palette-ktx", version.ref = "paletteKtx" }
+workRuntimeKtx = { group = "androidx.work", name = "work-runtime-ktx", version.ref = "workRuntimeKtx" }
+preferenceKtx = { group = "androidx.preference", name = "preference-ktx", version.ref = "preferenceKtx" }
+
+lifecycleProcess = { group = "androidx.lifecycle", name = "lifecycle-process", version.ref = "lifecycle" }
+lifecycleRuntimeKtx = { group = "androidx.lifecycle", name = "lifecycle-runtime-ktx", version.ref = "lifecycle" }
+lifecycleViewModelKtx = { group = "androidx.lifecycle", name = "lifecycle-viewmodel-ktx", version.ref = "lifecycle" }
+lifecycleRuntimeCompose = { group = "androidx.lifecycle", name = "lifecycle-runtime-compose", version.ref = "lifecycle" }
+lifecycleViewModelCompose = { group = "androidx.lifecycle", name = "lifecycle-viewmodel-compose", version.ref = "lifecycle" }
+lifecycleViewModelSavedState = { group = "androidx.lifecycle", name = "lifecycle-viewmodel-savedstate", version.ref = "lifecycle" }
+
+navigationRuntimeKtx = { group = "androidx.navigation", name = "navigation-runtime-ktx", version.ref = "navigation" }
+
+hiltAndroid = { group = "com.google.dagger", name = "hilt-android", version.ref = "hilt" }
+hiltAndroidCompiler = { group = "com.google.dagger", name = "hilt-android-compiler", version.ref = "hilt" }
+hiltNavigationCompose = { group = "androidx.hilt", name = "hilt-navigation-compose", version.ref = "hiltNavigationCompose" }
+
+navigationUiKtx = { group = "androidx.navigation", name = "navigation-ui-ktx", version.ref = "navigation" }
+navigationCompose = { group = "androidx.navigation", name = "navigation-compose", version.ref = "navigation" }
+
+composeLintChecks = { group = "com.slack.lint.compose", name = "compose-lint-checks", version.ref = "composeLintChecks" }
+
+material3 = { group = "androidx.compose.material3", name = "material3", version.ref = "material3" }
+
+composeBom = { group = "androidx.compose", name = "compose-bom", version.ref = "composeBom" }
+material3WindowSize = { group = "androidx.compose.material3", name = "material3-window-size-class" }
+ui = { group = "androidx.compose.ui", name = "ui" }
+uiViewBinding = { group = "androidx.compose.ui", name = "ui-viewbinding" }
+uiTooling = { group = "androidx.compose.ui", name = "ui-tooling" }
+uiToolingData = { group = "androidx.compose.ui", name = "ui-tooling-data" }
+uiToolingPreview = { group = "androidx.compose.ui", name = "ui-tooling-preview" }
+uiUtil = { group = "androidx.compose.ui", name = "ui-util" }
+composeMaterial = { group = "androidx.compose.material", name = "material" }
+materialIconsCore = { group = "androidx.compose.material", name = "material-icons-core" }
+materialIconsExtended = { group = "androidx.compose.material", name = "material-icons-extended" }
+foundation = { group = "androidx.compose.foundation", name = "foundation" }
+uiTextGoogleFonts = { group = "androidx.compose.ui", name = "ui-text-google-fonts" }
+uiTestJunit4 = { group = "androidx.compose.ui", name = "ui-test-junit4", version.ref = "uiTestJunit4" }
+uiTestManifest = { group = "androidx.compose.ui", name = "ui-test-manifest" }
+
+slf4jSimple = { group = "org.slf4j", name = "slf4j-simple", version.ref = "slf4jSimple" }
+junit = { group = "junit", name = "junit", version.ref = "junit" }
+junitExt = { group = "androidx.test.ext", name = "junit", version.ref = "junitExt" }
+
+orbitCore = { group = "org.orbit-mvi", name = "orbit-core", version.ref = "orbit" }
+orbitViewmodel = { group = "org.orbit-mvi", name = "orbit-viewmodel", version.ref = "orbit" }
+orbitCompose = { group = "org.orbit-mvi", name = "orbit-compose", version.ref = "orbit" }
+orbitTest = { group = "org.orbit-mvi", name = "orbit-test", version.ref = "orbit" }
+
+coilCompose = { group = "io.coil-kt", name = "coil-compose", version.ref = "coil" }
+
+mockk = { group = "io.mockk", name = "mockk", version.ref = "mockk" }
