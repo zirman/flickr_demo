@@ -45,9 +45,9 @@ class HomeViewModelTest {
             assertContentEquals(
                 expected = listOf(
                     // Order of expected uiState changes
-                    HomeUiState(tags, loading = false, photos = null),
-                    HomeUiState(tags, loading = true, photos = null),
-                    HomeUiState(tags, loading = false, photos = photos),
+                    HomeUiState(searchTags = tags, loading = false, photos = null),
+                    HomeUiState(searchTags = tags, loading = true, photos = null),
+                    HomeUiState(searchTags = tags, loading = false, photos = photos),
                 ),
                 actual = uiStates.await(),
             )
@@ -62,11 +62,14 @@ class HomeViewModelTest {
     fun `Load Failure Test`() = runTest(testDispatcher) {
         val tags = Tags("")
 
-        coEvery { photosRepositoryMock.getPhotosByTags(any()) } throws IllegalStateException("test")
+        coEvery { photosRepositoryMock.getPhotosByTags(any()) } coAnswers {
+            delay(1_000)
+            throw IllegalStateException("test")
+        }
 
         HomeViewModel(photosRepositoryMock).apply {
             val uiStates = async {
-                uiState.take(1).toList()
+                uiState.take(3).toList()
             }
 
             val errors = async {
@@ -76,7 +79,9 @@ class HomeViewModelTest {
             assertContentEquals(
                 expected = listOf(
                     // Expected final UI state
-                    HomeUiState(tags, loading = false, photos = null),
+                    HomeUiState(searchTags = tags, loading = false, photos = null),
+                    HomeUiState(searchTags = tags, loading = true, photos = null),
+                    HomeUiState(searchTags = tags, loading = false, photos = null),
                 ),
                 actual = uiStates.await(),
             )
