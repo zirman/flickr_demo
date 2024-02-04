@@ -24,25 +24,27 @@ import androidx.compose.runtime.remember
 import androidx.compose.runtime.rememberCoroutineScope
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
+import androidx.compose.ui.platform.LocalLifecycleOwner
 import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.unit.dp
 import androidx.hilt.navigation.compose.hiltViewModel
 import androidx.lifecycle.compose.collectAsStateWithLifecycle
+import androidx.lifecycle.flowWithLifecycle
 import androidx.navigation.NavController
 import com.flickr.demo.common.navigation.MainRoute
 import com.flickr.demo.common.scalars.Tags
-import com.flickr.demo.common.scalars.toEncodedUrlString
 import com.flickr.demo.common.view.R
 import kotlinx.collections.immutable.toImmutableList
-import kotlinx.coroutines.flow.receiveAsFlow
+import kotlinx.coroutines.CoroutineScope
 import kotlinx.coroutines.launch
 
 @Composable
 fun HomeScaffold(
     navController: NavController,
     modifier: Modifier = Modifier,
-    snackbarHostState: SnackbarHostState = remember { SnackbarHostState() },
     homeViewModel: HomeViewModel = hiltViewModel(),
+    snackbarHostState: SnackbarHostState = remember { SnackbarHostState() },
+    scope: CoroutineScope = rememberCoroutineScope(),
 ) {
     Scaffold(
         snackbarHost = {
@@ -56,31 +58,35 @@ fun HomeScaffold(
         topBar = {
             val searchTags by homeViewModel.searchTagsStateFlow.collectAsStateWithLifecycle()
 
-            val scope = rememberCoroutineScope()
-
+            val lifecycle = LocalLifecycleOwner.current
             val anErrorOccurred = stringResource(id = R.string.an_error_occurred)
             val retry = stringResource(id = R.string.retry)
 
             LaunchedEffect(Unit) {
                 scope.launch {
-                    homeViewModel.errorsReceiveChannel.receiveAsFlow().collect { throwable ->
-                        val result = snackbarHostState.showSnackbar(
-                            message = anErrorOccurred,
-                            actionLabel = retry,
-                            withDismissAction = true,
-                        )
+                    // show errors in snackbar
+                    homeViewModel.errorsFlow
+                        .flowWithLifecycle(lifecycle.lifecycle)
+                        .collect {
+                            val result = snackbarHostState.showSnackbar(
+                                message = anErrorOccurred,
+                                actionLabel = retry,
+                                withDismissAction = true,
+                            )
 
-                        if (result == SnackbarResult.ActionPerformed) {
-                            homeViewModel.retry()
+                            if (result == SnackbarResult.ActionPerformed) {
+                                homeViewModel.retry()
+                            }
                         }
-                    }
                 }
             }
 
             SearchBar(
                 query = searchTags.string,
                 onQueryChange = {
+                    // clear snackbar of errors
                     snackbarHostState.currentSnackbarData?.dismiss()
+                    // update search tags
                     homeViewModel.searchTagsStateFlow.value = Tags(it)
                 },
                 onSearch = {
@@ -104,7 +110,11 @@ fun HomeScaffold(
                 HomeContent(
                     photoItems = photoItems.orEmpty().toImmutableList(),
                     onClickPhotoItem = { url ->
-                        navController.navigate(route = "${MainRoute.Detail.path}?url=${url.toEncodedUrlString()}")
+                        navController.navigate(
+                            route = MainRoute.Detail.getUriBuilder()
+                                .appendQueryParameter("url", url.string)
+                                .toString(),
+                        )
                     },
                     modifier = Modifier.padding(paddingValues),
                 )
