@@ -46,6 +46,8 @@ fun HomeScaffold(
     snackbarHostState: SnackbarHostState = remember { SnackbarHostState() },
     scope: CoroutineScope = rememberCoroutineScope(),
 ) {
+    val uiState by homeViewModel.uiState.collectAsStateWithLifecycle()
+
     Scaffold(
         snackbarHost = {
             SnackbarHost(
@@ -56,8 +58,6 @@ fun HomeScaffold(
             ) { snackbarData -> Snackbar(snackbarData) }
         },
         topBar = {
-            val searchTags by homeViewModel.searchTagsStateFlow.collectAsStateWithLifecycle()
-
             val lifecycle = LocalLifecycleOwner.current
             val anErrorOccurred = stringResource(id = R.string.an_error_occurred)
             val retry = stringResource(id = R.string.retry)
@@ -82,12 +82,12 @@ fun HomeScaffold(
             }
 
             SearchBar(
-                query = searchTags.string,
+                query = uiState.searchTags.string,
                 onQueryChange = {
                     // clear snackbar of errors
                     snackbarHostState.currentSnackbarData?.dismiss()
                     // update search tags
-                    homeViewModel.searchTagsStateFlow.value = Tags(it)
+                    homeViewModel.searchTagsChange(Tags(it))
                 },
                 onSearch = {
                 },
@@ -104,8 +104,7 @@ fun HomeScaffold(
         },
         content = { paddingValues ->
             Box {
-                val photoItems by homeViewModel.photosStateFlow
-                    .collectAsStateWithLifecycle(initialValue = null)
+                val photoItems = uiState.photos
 
                 HomeContent(
                     photoItems = photoItems.orEmpty().toImmutableList(),
@@ -119,8 +118,7 @@ fun HomeScaffold(
                     modifier = Modifier.padding(paddingValues),
                 )
 
-                val loading by homeViewModel.loadingStateFlow.collectAsStateWithLifecycle()
-                if (loading) {
+                if (uiState.loading) {
                     CircularProgressIndicator(modifier = Modifier.align(Alignment.Center))
                 }
             }
