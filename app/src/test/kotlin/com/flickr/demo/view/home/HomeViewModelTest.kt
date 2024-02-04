@@ -7,11 +7,12 @@ import io.mockk.coEvery
 import io.mockk.coVerify
 import io.mockk.mockk
 import kotlinx.coroutines.Dispatchers
-import kotlinx.coroutines.async
 import kotlinx.coroutines.delay
-import kotlinx.coroutines.flow.take
 import kotlinx.coroutines.flow.toList
+import kotlinx.coroutines.launch
 import kotlinx.coroutines.test.StandardTestDispatcher
+import kotlinx.coroutines.test.UnconfinedTestDispatcher
+import kotlinx.coroutines.test.advanceUntilIdle
 import kotlinx.coroutines.test.runTest
 import kotlinx.coroutines.test.setMain
 import kotlin.test.BeforeTest
@@ -38,18 +39,23 @@ class HomeViewModelTest {
         }
 
         HomeViewModel(photosRepositoryMock).apply {
-            val uiStates = async {
-                uiState.take(3).toList()
+            val uiStates = mutableListOf<HomeUiState>()
+
+            backgroundScope.launch(UnconfinedTestDispatcher(testScheduler)) {
+                uiState.toList(uiStates)
             }
+
+            advanceUntilIdle()
 
             assertContentEquals(
                 expected = listOf(
                     // Order of expected uiState changes
                     HomeUiState(searchTags = tags, loading = false, photos = null),
                     HomeUiState(searchTags = tags, loading = true, photos = null),
+                    HomeUiState(searchTags = tags, loading = true, photos = photos),
                     HomeUiState(searchTags = tags, loading = false, photos = photos),
                 ),
-                actual = uiStates.await(),
+                actual = uiStates,
             )
         }
 
@@ -68,13 +74,18 @@ class HomeViewModelTest {
         }
 
         HomeViewModel(photosRepositoryMock).apply {
-            val uiStates = async {
-                uiState.take(3).toList()
+            val uiStates = mutableListOf<HomeUiState>()
+            val errors = mutableListOf<Unit>()
+
+            backgroundScope.launch(UnconfinedTestDispatcher(testScheduler)) {
+                uiState.toList(uiStates)
             }
 
-            val errors = async {
-                errorsFlow.take(1).toList()
+            backgroundScope.launch(UnconfinedTestDispatcher(testScheduler)) {
+                errorsFlow.toList(errors)
             }
+
+            advanceUntilIdle()
 
             assertContentEquals(
                 expected = listOf(
@@ -83,15 +94,13 @@ class HomeViewModelTest {
                     HomeUiState(searchTags = tags, loading = true, photos = null),
                     HomeUiState(searchTags = tags, loading = false, photos = null),
                 ),
-                actual = uiStates.await(),
+                actual = uiStates,
             )
 
             // Verify error event emitted
             assertContentEquals(
-                expected = listOf(
-                    Unit,
-                ),
-                actual = errors.await(),
+                expected = listOf(Unit),
+                actual = errors,
             )
         }
 
