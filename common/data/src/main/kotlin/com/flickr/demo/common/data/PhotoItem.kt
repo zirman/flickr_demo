@@ -4,9 +4,8 @@ import android.os.Parcelable
 import com.flickr.demo.common.api.PhotoItemApi
 import com.flickr.demo.common.scalars.Author
 import com.flickr.demo.common.scalars.AuthorId
-import com.flickr.demo.common.scalars.DateTaken
+import com.flickr.demo.common.scalars.Date
 import com.flickr.demo.common.scalars.Description
-import com.flickr.demo.common.scalars.Published
 import com.flickr.demo.common.scalars.Tags
 import com.flickr.demo.common.scalars.Title
 import kotlinx.parcelize.Parcelize
@@ -15,9 +14,9 @@ import kotlinx.parcelize.Parcelize
 data class PhotoItem(
     val title: Title,
     val media: Media,
-    val dateTaken: DateTaken,
+    val dateTaken: Date,
     val description: Description,
-    val published: Published,
+    val published: Date,
     val author: Author,
     val authorId: AuthorId,
     val tags: Tags,

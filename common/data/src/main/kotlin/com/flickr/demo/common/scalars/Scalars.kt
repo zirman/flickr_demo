@@ -39,12 +39,7 @@ value class Url(val string: String) : Parcelable
 @Parcelize
 @Serializable
 @JvmInline
-value class DateTaken(val string: String) : Parcelable
-
-@Parcelize
-@Serializable
-@JvmInline
-value class Published(val string: String) : Parcelable
+value class Date(val string: String) : Parcelable
 
 @Parcelize
 @Serializable
@@ -60,10 +55,6 @@ value class AuthorId(val string: String) : Parcelable
 @Serializable
 @JvmInline
 value class Tags(val string: String) : Parcelable
-
-fun Url.toEncodedUrlString(): String {
-    return URLEncoder.encode(string, "utf-8")
-}
 
 fun String.toUrl(): Url {
     return Url(URLDecoder.decode(this, "utf-8"))
