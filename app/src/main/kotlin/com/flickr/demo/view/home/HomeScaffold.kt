@@ -17,7 +17,6 @@ import androidx.compose.material3.SnackbarHostState
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.getValue
 import androidx.compose.runtime.remember
-import androidx.compose.runtime.rememberCoroutineScope
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.res.stringResource
@@ -29,8 +28,6 @@ import com.flickr.demo.common.navigation.MainRoute
 import com.flickr.demo.common.scalars.Tags
 import com.flickr.demo.common.view.R
 import kotlinx.collections.immutable.toImmutableList
-import kotlinx.coroutines.CoroutineScope
-import kotlinx.coroutines.launch
 
 @Composable
 fun HomeScaffold(
@@ -38,7 +35,6 @@ fun HomeScaffold(
     modifier: Modifier = Modifier,
     homeViewModel: HomeViewModel = hiltViewModel(),
     snackbarHostState: SnackbarHostState = remember { SnackbarHostState() },
-    scope: CoroutineScope = rememberCoroutineScope(),
 ) {
     val uiState by homeViewModel.uiState.collectAsStateWithLifecycle()
 
@@ -47,7 +43,7 @@ fun HomeScaffold(
             HomeSnackbarHost(
                 snackbarHostState = snackbarHostState,
                 errorsFlow = homeViewModel.errorsFlow,
-                onRetry = { scope.launch { homeViewModel.retry() } },
+                onRetry = { homeViewModel.retry() },
                 modifier = Modifier.windowInsetsPadding(
                     WindowInsets.safeContent.only(WindowInsetsSides.Bottom)
                 ),

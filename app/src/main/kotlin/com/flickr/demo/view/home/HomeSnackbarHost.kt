@@ -20,7 +20,7 @@ import kotlinx.coroutines.launch
 fun HomeSnackbarHost(
     snackbarHostState: SnackbarHostState,
     errorsFlow: Flow<Unit>,
-    onRetry: () -> Unit,
+    onRetry: suspend () -> Unit,
     modifier: Modifier = Modifier,
     scope: CoroutineScope = rememberCoroutineScope(),
 ) {
