@@ -43,7 +43,7 @@ android {
 }
 
 dependencies {
-    coreLibraryDesugaring(libs.desugarJdkLibs)
+    coreLibraryDesugaring(libs.desugarJdkLibsNio)
 
     api(project(":common:domain"))
 

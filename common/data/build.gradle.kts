@@ -1,6 +1,6 @@
 plugins {
     alias(libs.plugins.androidLibrary)
-    id(libs.plugins.kotlinxParcelize.get().pluginId)
+    alias(libs.plugins.kotlinxParcelize)
     alias(libs.plugins.kotlinAndroid)
     alias(libs.plugins.kotlinxSerialization)
     alias(libs.plugins.ksp)
@@ -53,7 +53,7 @@ android {
 }
 
 dependencies {
-    coreLibraryDesugaring(libs.desugarJdkLibs)
+    coreLibraryDesugaring(libs.desugarJdkLibsNio)
 
     implementation(platform(libs.composeBom))
 
@@ -67,11 +67,7 @@ dependencies {
     implementation(libs.hiltAndroid)
     ksp(libs.hiltAndroidCompiler)
 
-    testImplementation(libs.junit)
-
-    testImplementation(libs.kotlinTest)
-    testImplementation(libs.kotlinxCoroutinesTest)
-    testImplementation(libs.junitExt)
+    testImplementation(libs.bundles.test)
 }
 
 java {

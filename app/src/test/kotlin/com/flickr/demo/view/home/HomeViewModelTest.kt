@@ -13,8 +13,10 @@ import kotlinx.coroutines.launch
 import kotlinx.coroutines.test.StandardTestDispatcher
 import kotlinx.coroutines.test.UnconfinedTestDispatcher
 import kotlinx.coroutines.test.advanceUntilIdle
+import kotlinx.coroutines.test.resetMain
 import kotlinx.coroutines.test.runTest
 import kotlinx.coroutines.test.setMain
+import kotlin.test.AfterTest
 import kotlin.test.BeforeTest
 import kotlin.test.Test
 import kotlin.test.assertContentEquals
@@ -28,8 +30,13 @@ class HomeViewModelTest {
         Dispatchers.setMain(testDispatcher)
     }
 
+    @AfterTest
+    fun teardown() {
+        Dispatchers.resetMain()
+    }
+
     @Test
-    fun `Load Success Test`() = runTest(testDispatcher) {
+    fun `Load Success Test`() = runTest {
         val tags = Tags("")
         val photos = listOf<PhotoItem>(mockk())
 
@@ -41,7 +48,7 @@ class HomeViewModelTest {
         HomeViewModel(photosRepositoryMock).apply {
             val uiStates = mutableListOf<HomeUiState>()
 
-            backgroundScope.launch(UnconfinedTestDispatcher(testScheduler)) {
+            backgroundScope.launch(UnconfinedTestDispatcher()) {
                 uiState.toList(uiStates)
             }
 
@@ -49,7 +56,6 @@ class HomeViewModelTest {
 
             assertContentEquals(
                 expected = listOf(
-                    // Order of expected uiState changes
                     HomeUiState(searchTags = tags, loading = false, photos = null),
                     HomeUiState(searchTags = tags, loading = true, photos = null),
                     HomeUiState(searchTags = tags, loading = true, photos = photos),
@@ -65,7 +71,7 @@ class HomeViewModelTest {
     }
 
     @Test
-    fun `Load Failure Test`() = runTest(testDispatcher) {
+    fun `Load Failure Test`() = runTest {
         val tags = Tags("")
 
         coEvery { photosRepositoryMock.getPhotosByTags(any()) } coAnswers {
@@ -77,11 +83,11 @@ class HomeViewModelTest {
             val uiStates = mutableListOf<HomeUiState>()
             val errors = mutableListOf<Unit>()
 
-            backgroundScope.launch(UnconfinedTestDispatcher(testScheduler)) {
+            backgroundScope.launch(UnconfinedTestDispatcher()) {
                 uiState.toList(uiStates)
             }
 
-            backgroundScope.launch(UnconfinedTestDispatcher(testScheduler)) {
+            backgroundScope.launch(UnconfinedTestDispatcher()) {
                 errorsFlow.toList(errors)
             }
 
@@ -89,7 +95,6 @@ class HomeViewModelTest {
 
             assertContentEquals(
                 expected = listOf(
-                    // Expected final UI state
                     HomeUiState(searchTags = tags, loading = false, photos = null),
                     HomeUiState(searchTags = tags, loading = true, photos = null),
                     HomeUiState(searchTags = tags, loading = false, photos = null),

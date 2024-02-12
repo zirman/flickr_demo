@@ -1,6 +1,6 @@
 plugins {
     alias(libs.plugins.androidLibrary)
-    id(libs.plugins.kotlinxParcelize.get().pluginId)
+    alias(libs.plugins.kotlinxParcelize)
     alias(libs.plugins.kotlinAndroid)
 }
 
@@ -49,7 +49,7 @@ android {
 }
 
 dependencies {
-    coreLibraryDesugaring(libs.desugarJdkLibs)
+    coreLibraryDesugaring(libs.desugarJdkLibsNio)
 
     api(project(":common:data"))
 

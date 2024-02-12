@@ -49,12 +49,12 @@ class HomeViewModel @Inject constructor(
                 },
             ) { tags, _ -> tags }.collectLatest { tags ->
                 try {
-                    // `transformLatest()` and `delay()` is used instead of `debounce()` so that an
+                    // `collectLatest()` and `delay()` is used instead of `debounce()` so that an
                     // in flight request is cancelled immediately if the tags have changed.
-                    delay(typingDebounce.inWholeMilliseconds)
                     _uiState.update { uiState ->
                         uiState.copy(loading = true)
                     }
+                    delay(typingDebounce.inWholeMilliseconds)
                     val photos = photosRepository.getPhotosByTags(tags)
                     _uiState.update { uiState ->
                         uiState.copy(photos = photos)

@@ -76,7 +76,7 @@ android {
 }
 
 dependencies {
-    coreLibraryDesugaring(libs.desugarJdkLibs)
+    coreLibraryDesugaring(libs.desugarJdkLibsNio)
 
     implementation(project(":common:view"))
 
@@ -96,11 +96,7 @@ dependencies {
 
     implementation(libs.hiltNavigationCompose)
 
-    testImplementation(libs.mockk)
-    testImplementation(libs.kotlinTest)
-    testImplementation(libs.kotlinxCoroutinesTest)
-    testImplementation(libs.uiTestJunit4)
-    testImplementation(libs.junitExt)
+    testImplementation(libs.bundles.test)
 
     debugImplementation(libs.uiTestManifest)
 }

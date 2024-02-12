@@ -3,7 +3,6 @@ package com.flickr.demo.common.scalars
 import android.os.Parcelable
 import kotlinx.parcelize.Parcelize
 import kotlinx.serialization.Serializable
-import java.net.URLDecoder
 
 @Parcelize
 @Serializable
@@ -54,7 +53,3 @@ value class AuthorId(val string: String) : Parcelable
 @Serializable
 @JvmInline
 value class Tags(val string: String) : Parcelable
-
-fun String.toUrl(): Url {
-    return Url(URLDecoder.decode(this, "utf-8"))
-}

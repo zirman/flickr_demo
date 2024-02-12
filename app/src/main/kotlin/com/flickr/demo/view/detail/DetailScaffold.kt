@@ -11,11 +11,11 @@ import com.flickr.demo.common.scalars.Url
 @Composable
 fun DetailScaffold(
     navController: NavController,
-    url: Url?,
+    url: Url,
     modifier: Modifier = Modifier,
     detailViewModel: DetailViewModel = hiltViewModel(),
 ) {
-    val photoItem = detailViewModel.photoStateFlow(url!!)
+    val photoItem = detailViewModel.photoStateFlow(url)
 
     Scaffold(
         content = { paddingValues ->
